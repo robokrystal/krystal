@@ -23,15 +23,18 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Instalar dependências
-RUN npm ci --only=production
+# Instalar todas as dependências primeiro
+RUN npm install
+
+# Compilar TypeScript
+RUN npm run build
+
+# Instalar apenas dependências de produção
+RUN npm prune --production
 
 # Copiar código fonte
 COPY src/ ./src/
 COPY config/ ./config/
-
-# Compilar TypeScript
-RUN npm run build
 
 # Criar diretório para logs
 RUN mkdir -p logs
